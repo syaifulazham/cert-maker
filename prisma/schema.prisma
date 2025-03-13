@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String  @id @default(uuid())
+  email        String  @unique
+  name         String?
+  password     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  templates    CertificateTemplate[]
+  datasets     Dataset[]
+  executions   CertificateExecution[]
+}
+
+model CertificateTemplate {
+  id           String  @id @default(uuid())
+  userId       String
+  title        String
+  baseTemplate String  // PDF URL
+  dimensions   String  // A4, Letter, Custom
+  labels       Json    // Label configurations
+  images       Json    // Image configurations
+  fileNaming   String  // Naming convention with running number
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User @relation(fields: [userId], references: [id])
+  executions   CertificateExecution[]
+}
+
+model Dataset {
+  id        String  @id @default(uuid())
+  userId    String
+  title     String
+  data      Json    // Store CSV data as JSON
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User @relation(fields: [userId], references: [id])
+  executions CertificateExecution[]
+}
+
+model CertificateExecution {
+  id              String  @id @default(uuid())
+  userId          String
+  templateId      String
+  datasetId       String
+  status          String  // Queued, Processing, Completed
+  outputFiles     Json    // List of generated files
+  scheduledAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User @relation(fields: [userId], references: [id])
+  template        CertificateTemplate @relation(fields: [templateId], references: [id])
+  dataset         Dataset @relation(fields: [datasetId], references: [id])
+}
