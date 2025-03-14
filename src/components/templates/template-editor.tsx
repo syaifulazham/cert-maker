@@ -684,10 +684,12 @@ export default function TemplateEditor({
                     zIndex: isSelected ? 100 : 10,
                     backgroundColor: isSelected ? 'rgba(219, 234, 254, 0.3)' : 'transparent',
                     pointerEvents: 'auto', // Ensure element can receive mouse events
+                    touchAction: 'none', // Prevent default touch actions to improve dragging on touch devices
+                    userSelect: 'none', // Prevent text selection during drag
                   }}
                   onClick={(e) => e.stopPropagation()}
                   onMouseDown={(e) => handleMouseDown(e, 'label', label.id)}
-                  draggable={false}
+                  draggable="false"
                 >
                   {displayText || 'Sample Text'}
                 </div>
@@ -716,10 +718,12 @@ export default function TemplateEditor({
                     zIndex: isSelected ? 100 : 5,
                     backgroundColor: isSelected ? 'rgba(219, 234, 254, 0.1)' : 'transparent',
                     pointerEvents: 'auto', // Ensure element can receive mouse events
+                    touchAction: 'none', // Prevent default touch actions to improve dragging on touch devices
+                    userSelect: 'none', // Prevent text selection during drag
                   }}
                   onClick={(e) => e.stopPropagation()}
                   onMouseDown={(e) => handleMouseDown(e, 'image', image.id)}
-                  draggable={false}
+                  draggable="false"
                 >
                 </div>
               );
